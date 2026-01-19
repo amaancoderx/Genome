@@ -7,16 +7,35 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.colors import HexColor
 from reportlab.lib.units import inch
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak
+from reportlab.platypus import SimpleDocTemplate, Paragraph as _BaseParagraph, Spacer, Table, TableStyle, PageBreak
 from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_JUSTIFY
 from reportlab.lib import colors
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 from datetime import datetime
 import os
 from config import settings
+import unicodedata
 
-# Version 2.2 - Fixed contentStrategyFramework extraction and month handling
+
+# Create a custom Paragraph class that automatically sanitizes text
+class Paragraph(_BaseParagraph):
+    """Custom Paragraph that sanitizes text for UTF-8 encoding"""
+    def __init__(self, text, style, **kwargs):
+        # Sanitize text before passing to base class
+        if isinstance(text, str):
+            try:
+                # Normalize and encode to UTF-8
+                text = unicodedata.normalize('NFKD', text)
+                text = text.encode('utf-8', errors='ignore').decode('utf-8')
+            except Exception:
+                # Fallback to ASCII if UTF-8 fails
+                text = text.encode('ascii', errors='replace').decode('ascii')
+        super().__init__(text, style, **kwargs)
+
+# Version 2.3 - Fixed UTF-8 encoding for PDF generation
 print("=" * 80)
-print("[REPORT GENERATOR V2.2] Module loaded - ENHANCED DEBUG VERSION")
+print("[REPORT GENERATOR V2.3] Module loaded - UTF-8 ENCODING FIX")
 print("=" * 80)
 import json
 
