@@ -14,6 +14,16 @@ import importlib
 import sys
 
 
+def safe_print(text):
+    """Print text with UTF-8 encoding to avoid charmap errors on Windows"""
+    try:
+        print(text)
+    except UnicodeEncodeError:
+        # Fallback: encode to ASCII and replace problematic characters
+        safe_text = text.encode('ascii', errors='replace').decode('ascii')
+        print(safe_text)
+
+
 class MarketGenomeEngine:
     """
     Core engine for Market Genome analysis
@@ -81,7 +91,7 @@ class MarketGenomeEngine:
             if website_url:
                 brand_data['website_data'] = self._scrape_website(website_url)
 
-        print(f"   SUCCESS - Data collected for: {brand_data['brand_name']}")
+        safe_print(f"   SUCCESS - Data collected for: {brand_data['brand_name']}")
 
         return brand_data
 
