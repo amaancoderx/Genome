@@ -15,6 +15,7 @@ from datetime import datetime
 
 from config import settings, ensure_directories
 from models import JobStatus
+from market_genome_engine import safe_print
 
 # Create FastAPI app
 app = FastAPI(
@@ -148,9 +149,9 @@ def analyze_brand_genome(
         from market_genome_engine import MarketGenomeEngine
         from email_service import EmailService
 
-        print(f"\n[{job_id}] Starting Market Genome Analysis")
-        print(f"[{job_id}] Brand: {brand_input}")
-        print(f"[{job_id}] Type: {input_type}")
+        safe_print(f"\n[{job_id}] Starting Market Genome Analysis")
+        safe_print(f"[{job_id}] Brand: {brand_input}")
+        safe_print(f"[{job_id}] Type: {input_type}")
 
         # Initialize engine
         engine = MarketGenomeEngine()
@@ -222,11 +223,11 @@ def analyze_brand_genome(
         genome_jobs[job_id]['message'] = 'Marketing Genome Report generated successfully!'
         genome_jobs[job_id]['completed_at'] = datetime.now().isoformat()
 
-        print(f"[{job_id}] SUCCESS - Complete! Report sent to {email}")
+        safe_print(f"[{job_id}] SUCCESS - Complete! Report sent to {email}")
 
     except Exception as e:
         error_msg = f"Error generating genome: {str(e)}"
-        print(f"[{job_id}] ERROR - {error_msg}")
+        safe_print(f"[{job_id}] ERROR - {error_msg}")
 
         genome_jobs[job_id]['status'] = JobStatus.FAILED
         genome_jobs[job_id]['message'] = error_msg
@@ -290,8 +291,8 @@ async def analyze_brand(
         email
     )
 
-    print(f"\nSUCCESS - Genome analysis started: {job_id}")
-    print(f"   Brand: {brand_input}")
+    safe_print(f"\nSUCCESS - Genome analysis started: {job_id}")
+    safe_print(f"   Brand: {brand_input}")
 
     return {
         "job_id": job_id,
@@ -428,8 +429,8 @@ I can help you with:
 
 What would you like to work on today?"""
 
-        print(f"\nSUCCESS - Chat session started: {session_id}")
-        print(f"   Brand: {request.brand_handle}")
+        safe_print(f"\nSUCCESS - Chat session started: {session_id}")
+        safe_print(f"   Brand: {request.brand_handle}")
 
         return {
             "session_id": session_id,
@@ -439,7 +440,7 @@ What would you like to work on today?"""
         }
 
     except Exception as e:
-        print(f"ERROR - Chat init failed: {str(e)}")
+        safe_print(f"ERROR - Chat init failed: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to initialize chat: {str(e)}")
 
 
@@ -469,8 +470,8 @@ async def send_chat_message(request: ChatMessageRequest):
         # Get AI response
         response_data = assistant.chat(request.message)
 
-        print(f"\n[{request.session_id[:8]}] User: {request.message[:50]}...")
-        print(f"[{request.session_id[:8]}] AI: {response_data['response'][:50]}...")
+        safe_print(f"\n[{request.session_id[:8]}] User: {request.message[:50]}...")
+        safe_print(f"[{request.session_id[:8]}] AI: {response_data['response'][:50]}...")
 
         return {
             "session_id": request.session_id,
@@ -484,7 +485,7 @@ async def send_chat_message(request: ChatMessageRequest):
     except HTTPException:
         raise
     except Exception as e:
-        print(f"ERROR - Chat message failed: {str(e)}")
+        safe_print(f"ERROR - Chat message failed: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Chat error: {str(e)}")
 
 
@@ -525,9 +526,9 @@ async def generate_chat_report(request: ChatReportRequest, background_tasks: Bac
             'chat_session_id': request.session_id
         }
 
-        print(f"\nSUCCESS - Chat report started: {job_id}")
-        print(f"   Brand: {brand_handle}")
-        print(f"   Email: {request.email}")
+        safe_print(f"\nSUCCESS - Chat report started: {job_id}")
+        safe_print(f"   Brand: {brand_handle}")
+        safe_print(f"   Email: {request.email}")
 
         # Start background report generation (non-blocking)
         background_tasks.add_task(
@@ -551,7 +552,7 @@ async def generate_chat_report(request: ChatReportRequest, background_tasks: Bac
     except HTTPException:
         raise
     except Exception as e:
-        print(f"ERROR - Report generation failed: {str(e)}")
+        safe_print(f"ERROR - Report generation failed: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Report generation error: {str(e)}")
 
 
