@@ -1533,11 +1533,24 @@
 
         // Format Message
         function formatMessage(text) {
+            // CRITICAL FIX: Process URLs BEFORE converting newlines to <br>
+            // This prevents <br> from being included in the URL
+
+            // First, convert URLs to clickable links (before newlines become <br>)
+            text = text.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank">$1</a>');
+
+            // Then convert newlines to <br>
             text = text.replace(/\n/g, '<br>');
+
+            // Format bold text
             text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+            // Format bullet points
             text = text.replace(/^- (.+)$/gm, '• $1');
-            text = text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
-            text = text.replace(/@([a-zA-Z0-9._]+)/g, '<a href="https://instagram.com/$1" target="_blank">@$1</a>');
+
+            // Convert @handles to Instagram links (but not if they're already in a link)
+            text = text.replace(/@([a-zA-Z0-9._]+)(?![^<]*<\/a>)/g, '<a href="https://instagram.com/$1" target="_blank">@$1</a>');
+
             return text;
         }
 
