@@ -1,0 +1,135 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { auth } from '@clerk/nextjs/server'
+import { generateJSON } from '@/lib/together'
+
+export async function POST(req: NextRequest) {
+  try {
+    const { userId } = await auth()
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const { brandInput } = await req.json()
+
+    if (!brandInput) {
+      return NextResponse.json(
+        { error: 'Brand input is required' },
+        { status: 400 }
+      )
+    }
+
+    // Analyze Brand DNA
+    const brandDnaPrompt = `Analyze this brand and extract its DNA: "${brandInput}"
+
+Provide a comprehensive brand DNA analysis covering:
+1. BRAND PERSONALITY - Tone & Voice, Core Values, Brand Archetype
+2. POSITIONING - Market Position, Unique Value Proposition, Differentiation Strategy
+3. TARGET AUDIENCE - Primary Demographics, Psychographics, Pain Points Addressed
+4. VISUAL IDENTITY - Color Psychology, Design Language, Brand Aesthetics
+5. MESSAGING STRATEGY - Key Messages, Communication Style, Emotional Appeal
+
+Return as JSON with these exact keys:
+{
+  "personality": {"tone": "", "values": [], "archetype": ""},
+  "positioning": {"market_position": "", "uvp": "", "differentiation": ""},
+  "audience": {"demographics": "", "psychographics": "", "pain_points": []},
+  "visual": {"colors": [], "design_language": "", "aesthetics": ""},
+  "messaging": {"key_messages": [], "style": "", "emotional_appeal": ""}
+}`
+
+    const brandDna = await generateJSON(brandDnaPrompt)
+
+    // Analyze Competitors
+    const competitorPrompt = `Based on this brand analysis, identify competitors and their weaknesses:
+
+Brand: ${brandInput}
+Positioning: ${brandDna.positioning?.market_position || 'N/A'}
+
+Provide:
+1. Top 3-5 direct competitors with their weaknesses
+2. Market gaps/opportunities
+3. Competitive advantages to leverage
+
+Return as JSON:
+{
+  "competitors": [{"name": "", "weakness": "", "market_share": ""}],
+  "market_gaps": [],
+  "opportunities": [],
+  "competitive_advantages": []
+}`
+
+    const competitors = await generateJSON(competitorPrompt)
+
+    // Create Growth Roadmap
+    const roadmapPrompt = `Create a 90-day growth roadmap for this brand:
+
+Brand DNA:
+${JSON.stringify(brandDna, null, 2)}
+
+Market Opportunities:
+${JSON.stringify(competitors.opportunities || [], null, 2)}
+
+Return JSON with this EXACT structure:
+{
+  "month_1": {
+    "title": "Quick Wins",
+    "priorities": ["Priority 1", "Priority 2", "Priority 3"]
+  },
+  "month_2": {
+    "title": "Momentum Building",
+    "priorities": ["Priority 1", "Priority 2", "Priority 3"]
+  },
+  "month_3": {
+    "title": "Scaling",
+    "priorities": ["Priority 1", "Priority 2", "Priority 3"]
+  },
+  "key_metrics": ["Metric 1", "Metric 2"],
+  "resources": ["Resource 1", "Resource 2"]
+}`
+
+    const growthRoadmap = await generateJSON(roadmapPrompt)
+
+    // Create Content Strategy
+    const contentPrompt = `Create a content strategy framework for this brand:
+
+Brand DNA:
+Tone: ${brandDna.personality?.tone || 'Professional'}
+Values: ${(brandDna.personality?.values || []).join(', ')}
+Target Audience: ${brandDna.audience?.demographics || 'N/A'}
+
+Return JSON with this EXACT structure:
+{
+  "content_pillars": [
+    {"name": "Pillar Name 1", "description": "Description of this content pillar"},
+    {"name": "Pillar Name 2", "description": "Description of this content pillar"},
+    {"name": "Pillar Name 3", "description": "Description of this content pillar"}
+  ],
+  "content_formats": ["Blog posts", "Videos", "Social media"],
+  "posting_frequency": {
+    "instagram": "3-4 times per week",
+    "twitter": "Daily",
+    "blog": "2 times per week"
+  },
+  "platform_strategies": [
+    {"platform": "Instagram", "strategy": "Strategy description"},
+    {"platform": "Twitter", "strategy": "Strategy description"}
+  ]
+}`
+
+    const contentStrategy = await generateJSON(contentPrompt)
+
+    return NextResponse.json({
+      brandDna,
+      competitors,
+      growthRoadmap,
+      contentStrategy,
+      pdfUrl: null, // TODO: Generate PDF
+    })
+  } catch (error) {
+    console.error('Genome analysis error:', error)
+    return NextResponse.json(
+      { error: 'Failed to analyze brand' },
+      { status: 500 }
+    )
+  }
+}
