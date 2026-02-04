@@ -41,22 +41,29 @@ Return as JSON with these exact keys:
     const brandDna = await generateJSON(brandDnaPrompt)
 
     // Analyze Competitors
-    const competitorPrompt = `Based on this brand analysis, identify competitors and their weaknesses:
+    const competitorPrompt = `Based on this brand analysis, identify REAL competitors and their weaknesses:
 
 Brand: ${brandInput}
 Positioning: ${brandDna.positioning?.market_position || 'N/A'}
 
+IMPORTANT: You MUST provide REAL, ACTUAL company/brand names that exist in the market. Do NOT use placeholder names like "BrandX", "BrandY", "CompetitorA" etc.
+
+For example:
+- If analyzing a sportswear brand, competitors might be: Nike, Adidas, Puma, Under Armour
+- If analyzing a tech company, competitors might be: Apple, Google, Microsoft, Samsung
+- If analyzing a coffee brand, competitors might be: Starbucks, Dunkin, Peet's Coffee
+
 Provide:
-1. Top 3-5 direct competitors with their weaknesses
-2. Market gaps/opportunities
+1. Top 4 REAL direct competitors with their ACTUAL brand names and specific weaknesses
+2. Market gaps/opportunities in this industry
 3. Competitive advantages to leverage
 
 Return as JSON:
 {
-  "competitors": [{"name": "", "weakness": "", "market_share": ""}],
-  "market_gaps": [],
-  "opportunities": [],
-  "competitive_advantages": []
+  "competitors": [{"name": "Real Brand Name", "weakness": "Specific weakness", "market_share": "estimated %"}],
+  "market_gaps": ["Specific gap 1", "Specific gap 2"],
+  "opportunities": ["Opportunity 1", "Opportunity 2", "Opportunity 3"],
+  "competitive_advantages": ["Advantage 1", "Advantage 2"]
 }`
 
     const competitors = await generateJSON(competitorPrompt)
