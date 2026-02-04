@@ -55,7 +55,7 @@ export interface AdGeneration {
 // Helper functions
 export async function saveGenomeReport(
   userId: string,
-  report: Omit<GenomeReport, 'id' | 'created_at'>
+  report: Omit<GenomeReport, 'id' | 'user_id' | 'created_at'>
 ) {
   const { data, error } = await supabaseAdmin
     .from('genome_reports')
@@ -83,7 +83,7 @@ export async function getUserReports(userId: string) {
 
 export async function saveAdGeneration(
   userId: string,
-  adGen: Omit<AdGeneration, 'id' | 'created_at' | 'updated_at'>
+  adGen: Omit<AdGeneration, 'id' | 'user_id' | 'created_at' | 'updated_at'>
 ) {
   const { data, error } = await supabaseAdmin
     .from('ad_generations')

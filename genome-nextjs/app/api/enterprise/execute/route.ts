@@ -100,24 +100,31 @@ export async function POST(req: NextRequest) {
         }
 
         // Log the decision for audit trail
-        await supabaseAdmin
-          .from('audit_log')
-          .insert({
-            user_id: userId,
-            action: 'STRATEGY_EXECUTED',
-            resource_type: 'strategy',
-            resource_id: strategy.id.toString(),
-            details: {
-              prompt: payload.prompt,
-              selectedStrategy: payload.selectedStrategy,
-              totalBudget: payload.totalBudgetImpact,
-              approvalCount: payload.approvalItems?.length || 0,
-              agentCount: payload.agents?.length || 0,
-            },
-            created_at: new Date().toISOString(),
-          })
-          .then(() => console.log('Audit log created'))
-          .catch((err) => console.log('Audit log table may not exist:', err))
+        try {
+          const { error: auditError } = await supabaseAdmin
+            .from('audit_log')
+            .insert({
+              user_id: userId,
+              action: 'STRATEGY_EXECUTED',
+              resource_type: 'strategy',
+              resource_id: strategy.id.toString(),
+              details: {
+                prompt: payload.prompt,
+                selectedStrategy: payload.selectedStrategy,
+                totalBudget: payload.totalBudgetImpact,
+                approvalCount: payload.approvalItems?.length || 0,
+                agentCount: payload.agents?.length || 0,
+              },
+              created_at: new Date().toISOString(),
+            })
+          if (!auditError) {
+            console.log('Audit log created')
+          } else {
+            console.log('Audit log table may not exist:', auditError.message)
+          }
+        } catch (auditErr) {
+          console.log('Audit log error:', auditErr)
+        }
       } else {
         console.log('Strategy table may not exist or error:', strategyError?.message)
         // Calculate tasks that would have been created

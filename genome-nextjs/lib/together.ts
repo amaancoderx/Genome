@@ -60,7 +60,7 @@ export async function generateImage(prompt: string) {
       quality: 'standard',
     })
 
-    return response.data[0]?.url || null
+    return response.data?.[0]?.url || null
   } catch (error) {
     console.error('OpenAI image error:', error)
     return null
