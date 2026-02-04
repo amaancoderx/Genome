@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
+import { supabaseAdmin } from '@/lib/supabase'
 
 export async function POST(req: NextRequest) {
   try {
@@ -36,6 +37,18 @@ I can help you with:
 - Weekly content planning
 
 What would you like to work on today?`
+
+    // Save chat session to Supabase
+    const { error: saveError } = await supabaseAdmin.from('chat_sessions').insert({
+      id: sessionId,
+      user_id: userId,
+      brand_handle: brandHandle,
+      messages: [{ role: 'assistant', content: welcomeMessage }],
+    })
+
+    if (saveError) {
+      console.error('Error saving chat session:', saveError)
+    }
 
     return NextResponse.json({
       sessionId,

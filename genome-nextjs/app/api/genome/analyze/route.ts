@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import { generateJSON } from '@/lib/together'
+import { supabaseAdmin } from '@/lib/supabase'
 
 export async function POST(req: NextRequest) {
   try {
@@ -118,12 +119,27 @@ Return JSON with this EXACT structure:
 
     const contentStrategy = await generateJSON(contentPrompt)
 
+    // Save report to Supabase
+    const { error: saveError } = await supabaseAdmin.from('genome_reports').insert({
+      user_id: userId,
+      brand_input: brandInput,
+      brand_dna: brandDna,
+      competitors: competitors,
+      growth_roadmap: growthRoadmap,
+      content_strategy: contentStrategy,
+      status: 'completed',
+    })
+
+    if (saveError) {
+      console.error('Error saving genome report:', saveError)
+    }
+
     return NextResponse.json({
       brandDna,
       competitors,
       growthRoadmap,
       contentStrategy,
-      pdfUrl: null, // TODO: Generate PDF
+      pdfUrl: null,
     })
   } catch (error) {
     console.error('Genome analysis error:', error)

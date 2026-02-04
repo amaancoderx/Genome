@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from '@clerk/nextjs/server'
 import { generateJSON, generateImage } from '@/lib/together'
+import { supabaseAdmin } from '@/lib/supabase'
 
 export async function POST(req: NextRequest) {
   try {
@@ -118,6 +119,20 @@ Return JSON:
         }
       })
     )
+
+    // Save ad generation to Supabase
+    const { error: saveError } = await supabaseAdmin.from('ad_generations').insert({
+      user_id: userId,
+      keyword,
+      company_name: companyName,
+      business_description: businessDescription || null,
+      status: 'completed',
+      results: { ads: adsWithVariations },
+    })
+
+    if (saveError) {
+      console.error('Error saving ad generation:', saveError)
+    }
 
     return NextResponse.json({
       keyword,

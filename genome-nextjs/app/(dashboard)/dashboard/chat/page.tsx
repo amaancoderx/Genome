@@ -374,7 +374,26 @@ export default function ChatPage() {
                     )}
                   >
                     <div className="prose prose-sm prose-invert max-w-none">
-                      <ReactMarkdown>{message.content}</ReactMarkdown>
+                      <ReactMarkdown
+                        components={{
+                          a: ({ href, children }) => (
+                            <a
+                              href={href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-genome-400 hover:text-genome-300 underline font-medium"
+                            >
+                              {children}
+                            </a>
+                          ),
+                          strong: ({ children }) => (
+                            <strong className="text-white font-semibold">{children}</strong>
+                          ),
+                          hr: () => <div className="my-4" />,
+                        }}
+                      >
+                        {message.content}
+                      </ReactMarkdown>
                     </div>
                     {message.imageUrl && (
                       <div className="mt-3">

@@ -1,17 +1,19 @@
 'use client'
 
-import { UserButton } from '@clerk/nextjs'
+import { UserButton, SignOutButton } from '@clerk/nextjs'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import {
   MessageSquare,
   Dna,
-  Megaphone,
   LayoutDashboard,
   Settings,
   ChevronLeft,
   ChevronRight,
+  Building2,
+  ListTodo,
+  LogOut,
 } from 'lucide-react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
@@ -23,6 +25,16 @@ const navigation = [
     icon: LayoutDashboard,
   },
   {
+    name: 'Enterprise',
+    href: '/dashboard/enterprise',
+    icon: Building2,
+  },
+  {
+    name: 'Tasks',
+    href: '/dashboard/enterprise/tasks',
+    icon: ListTodo,
+  },
+  {
     name: 'AI Chat',
     href: '/dashboard/chat',
     icon: MessageSquare,
@@ -31,11 +43,6 @@ const navigation = [
     name: 'Brand Genome',
     href: '/dashboard/genome',
     icon: Dna,
-  },
-  {
-    name: 'Ad Generator',
-    href: '/dashboard/ads',
-    icon: Megaphone,
   },
   {
     name: 'Settings',
@@ -113,7 +120,7 @@ export default function DashboardLayout({
 
         {/* User */}
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-800">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 mb-3">
             <UserButton
               appearance={{
                 elements: {
@@ -132,6 +139,19 @@ export default function DashboardLayout({
               </div>
             )}
           </div>
+          <SignOutButton>
+            <Button
+              variant="ghost"
+              size="sm"
+              className={cn(
+                'w-full text-slate-400 hover:text-red-400 hover:bg-red-500/10',
+                collapsed ? 'justify-center px-2' : 'justify-start'
+              )}
+            >
+              <LogOut className="h-4 w-4 flex-shrink-0" />
+              {!collapsed && <span className="ml-2">Log out</span>}
+            </Button>
+          </SignOutButton>
         </div>
       </aside>
 
