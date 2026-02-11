@@ -226,20 +226,39 @@ export default function EnterprisePage() {
         body: JSON.stringify({ prompt, agents: agentsToProcess }),
       })
 
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}))
+        console.error('API error:', errorData)
+        alert(`Error: ${errorData.error || 'Failed to process command. Please try again.'}`)
+        setActiveAgents([])
+        return
+      }
+
       const data = await res.json()
+
+      // Validate response has required fields
+      if (!data.agents || !Array.isArray(data.agents)) {
+        console.error('Invalid response format:', data)
+        alert('Received invalid response from AI. Please try again.')
+        setActiveAgents([])
+        return
+      }
+
       setResponse(data)
       if (data.selectedStrategy) {
         setSelectedStrategyView(data.selectedStrategy)
       }
     } catch (error) {
       console.error('Command processing error:', error)
+      alert('Network error. Please check your connection and try again.')
+      setActiveAgents([])
     } finally {
       setIsProcessing(false)
     }
   }
 
   const getAgentResponse = (agentId: string) => {
-    return response?.agents.find((a) => a.agent === agentId)
+    return response?.agents?.find((a) => a.agent === agentId)
   }
 
   const toggleApproval = (itemId: string) => {
@@ -836,7 +855,7 @@ export default function EnterprisePage() {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2">
-                  {response.tradeOffs.map((tradeoff, i) => (
+                  {(response.tradeOffs || []).map((tradeoff, i) => (
                     <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
                       <div className="w-5 h-5 rounded-full bg-yellow-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                         <span className="text-xs text-yellow-400">{i + 1}</span>
@@ -856,7 +875,7 @@ export default function EnterprisePage() {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2">
-                  {response.overallRisks.map((risk, i) => (
+                  {(response.overallRisks || []).map((risk, i) => (
                     <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
                       <AlertTriangle className="h-4 w-4 text-red-400 flex-shrink-0 mt-0.5" />
                       {risk}
@@ -983,7 +1002,7 @@ export default function EnterprisePage() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {response.measurementPlan.map((kpi, i) => (
+                {(response.measurementPlan || []).map((kpi, i) => (
                   <div
                     key={i}
                     className="p-3 bg-slate-800 rounded-lg flex items-center gap-2"

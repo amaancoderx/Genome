@@ -239,20 +239,44 @@ IMPORTANT:
 
 Generate the comprehensive enterprise response JSON.`
 
-    const response = await generateJSON(fullPrompt)
-
-    // Filter agents to only include selected ones
-    if (response.agents) {
-      response.agents = response.agents.filter((agent: { agent: string }) =>
-        agents.includes(agent.agent)
+    let response
+    try {
+      response = await generateJSON(fullPrompt)
+    } catch (aiError) {
+      console.error('AI generation error:', aiError)
+      return NextResponse.json(
+        { error: 'AI service is temporarily unavailable. Please check your API key configuration and try again.' },
+        { status: 503 }
       )
     }
+
+    // Validate response has required fields
+    if (!response || !response.agents || !Array.isArray(response.agents)) {
+      console.error('Invalid AI response:', response)
+      return NextResponse.json(
+        { error: 'AI returned an invalid response. Please try again.' },
+        { status: 502 }
+      )
+    }
+
+    // Filter agents to only include selected ones
+    response.agents = response.agents.filter((agent: { agent: string }) =>
+      agents.includes(agent.agent)
+    )
+
+    // Ensure all required arrays exist
+    response.tradeOffs = response.tradeOffs || []
+    response.overallRisks = response.overallRisks || []
+    response.measurementPlan = response.measurementPlan || []
+    response.executionPhases = response.executionPhases || []
+    response.approvalItems = response.approvalItems || []
+    response.strategyOptions = response.strategyOptions || []
 
     return NextResponse.json(response)
   } catch (error) {
     console.error('Enterprise command error:', error)
     return NextResponse.json(
-      { error: 'Failed to process enterprise command' },
+      { error: 'Failed to process enterprise command. Please try again.' },
       { status: 500 }
     )
   }
