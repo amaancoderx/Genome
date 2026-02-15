@@ -22,6 +22,7 @@ import {
   Network,
   Shield,
   MessageSquare,
+  Radar,
 } from 'lucide-react'
 
 export default function LandingPage() {
@@ -181,7 +182,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
             {[
               { value: '6', label: 'AI Agents' },
-              { value: '100%', label: 'Cross-Functional Alignment' },
+              { value: 'Ad Intel', label: 'Competitive Analysis' },
               { value: 'Real-Time', label: 'Decision Support' },
               { value: '24/7', label: 'Strategic AI' },
             ].map((stat) => (
@@ -336,6 +337,14 @@ export default function LandingPage() {
                 description:
                   'Personal marketing strategist for content, competitors, audience insights & growth advice.',
                 color: 'from-purple-500 to-pink-500',
+              },
+              {
+                icon: <Radar className="h-6 w-6" />,
+                title: 'Ad Intelligence Agent',
+                description:
+                  'Competitive ad analysis, creative strategy, and AI-generated ad concepts with performance predictions.',
+                color: 'from-sky-500 to-indigo-500',
+                badge: 'NEW',
               },
               {
                 icon: <Shield className="h-6 w-6" />,

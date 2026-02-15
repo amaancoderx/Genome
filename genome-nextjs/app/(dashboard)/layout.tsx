@@ -13,6 +13,7 @@ import {
   ChevronRight,
   Building2,
   ListTodo,
+  Radar,
   LogOut,
 } from 'lucide-react'
 import { useState } from 'react'
@@ -43,6 +44,11 @@ const navigation = [
     name: 'Brand Genome',
     href: '/dashboard/genome',
     icon: Dna,
+  },
+  {
+    name: 'Ad Intelligence',
+    href: '/dashboard/ad-intelligence',
+    icon: Radar,
   },
   {
     name: 'Settings',

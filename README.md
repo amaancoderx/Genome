@@ -1,6 +1,6 @@
 # Genome AI - Enterprise Marketing Intelligence Platform
 
-An AI-powered enterprise command center for strategic decision-making and brand intelligence.
+An AI-powered enterprise command center for strategic decision-making, brand intelligence, and ad optimization.
 
 ## Team
 
@@ -16,6 +16,15 @@ Execute strategic decisions with 6 specialized AI agents:
 - **Operations Agent** - Process optimization and efficiency
 - **Support Agent** - Customer experience and satisfaction
 - **HR Agent** - Talent management and culture development
+
+### Ad Intelligence Agent (NEW)
+AI-powered competitive ad analysis and creative strategy engine:
+- **Competitor Ad Analysis** - Deep analysis of real competitor advertising strategies
+- **Instagram Creative Intelligence** - Design patterns, color psychology, typography trends
+- **Strategic Positioning & Gap Analysis** - Identify untapped market opportunities
+- **Creative Ad Concepts** - AI-generated ad image references with style and platform recommendations
+- **Performance Predictions & KPIs** - CTR estimates, engagement projections, A/B test recommendations
+- **PDF Report Export** - Downloadable professional intelligence reports with embedded creative references
 
 ### AI-Guided Company Profile
 Set up your company profile with AI assistance for personalized strategic recommendations.
@@ -38,8 +47,10 @@ Review and approve strategic recommendations before execution with confirmation 
 - **Language:** TypeScript
 - **Authentication:** Clerk (@clerk/nextjs v6.37.1)
 - **Database:** Supabase
-- **Styling:** Tailwind CSS
+- **AI:** OpenAI GPT-4o (reports) + DALL-E 3 (creative references)
+- **Styling:** Tailwind CSS with @tailwindcss/typography
 - **UI Components:** shadcn/ui
+- **PDF Generation:** jsPDF
 
 ## Getting Started
 
@@ -74,6 +85,9 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 OPENAI_API_KEY=your_openai_key
+GOOGLE_API_KEY=your_google_api_key
+GOOGLE_SEARCH_ENGINE_ID=your_google_cse_id
+META_AD_LIBRARY_TOKEN=your_meta_token (optional)
 ```
 
 5. Run the development server:
@@ -90,21 +104,26 @@ genome-nextjs/
 ├── app/
 │   ├── (dashboard)/
 │   │   ├── dashboard/
-│   │   │   ├── enterprise/      # Enterprise Command Center
-│   │   │   ├── chat/            # AI Chat Assistant
-│   │   │   ├── genome/          # Brand Genome Analysis
-│   │   │   └── settings/        # User Settings
-│   │   └── layout.tsx           # Dashboard layout with sidebar
+│   │   │   ├── ad-intelligence/   # Ad Intelligence Agent
+│   │   │   ├── enterprise/        # Enterprise Command Center
+│   │   │   ├── chat/              # AI Chat Assistant
+│   │   │   ├── genome/            # Brand Genome Analysis
+│   │   │   └── settings/          # User Settings
+│   │   └── layout.tsx             # Dashboard layout with sidebar
 │   ├── api/
-│   │   ├── enterprise/          # Enterprise API routes
-│   │   ├── chat/                # Chat API routes
-│   │   ├── genome/              # Genome analysis routes
-│   │   └── stats/               # Statistics API
-│   └── page.tsx                 # Landing page
+│   │   ├── ad-intelligence/       # Ad Intelligence API routes
+│   │   ├── enterprise/            # Enterprise API routes
+│   │   ├── chat/                  # Chat API routes
+│   │   ├── genome/                # Genome analysis routes
+│   │   └── stats/                 # Statistics API
+│   └── page.tsx                   # Landing page
 ├── components/
-│   └── ui/                      # Reusable UI components
+│   └── ui/                        # Reusable UI components
 └── lib/
-    └── utils.ts                 # Utility functions
+    ├── ad-intelligence-pdf.ts     # PDF report generator
+    ├── meta-ad-library.ts         # Meta Ad Library & Google Search integration
+    ├── together.ts                # OpenAI/DALL-E utilities
+    └── utils.ts                   # Utility functions
 ```
 
 ## License

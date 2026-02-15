@@ -57,7 +57,7 @@ export async function generateImage(prompt: string) {
       prompt: prompt,
       n: 1,
       size: '1024x1024',
-      quality: 'standard',
+      quality: 'hd',
     })
 
     return response.data?.[0]?.url || null

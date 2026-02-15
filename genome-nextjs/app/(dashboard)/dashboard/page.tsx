@@ -25,6 +25,7 @@ import {
   CheckCircle2,
   Clock,
   TrendingUp,
+  Radar,
 } from 'lucide-react'
 
 interface UserStats {
@@ -137,6 +138,14 @@ export default function DashboardPage() {
       icon: MessageSquare,
       href: '/dashboard/chat',
       color: 'from-cyan-500 to-blue-500',
+    },
+    {
+      title: 'Ad Intelligence',
+      description: 'Competitive ad analysis with creative concepts and insights',
+      icon: Radar,
+      href: '/dashboard/ad-intelligence',
+      color: 'from-sky-500 to-indigo-500',
+      badge: 'NEW',
     },
     {
       title: 'Brand Genome',
