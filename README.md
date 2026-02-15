@@ -17,7 +17,7 @@ Execute strategic decisions with 6 specialized AI agents:
 - **Support Agent** - Customer experience and satisfaction
 - **HR Agent** - Talent management and culture development
 
-### Ad Intelligence Agent (NEW)
+### Ad Intelligence Agent 
 AI-powered competitive ad analysis and creative strategy engine:
 - **Competitor Ad Analysis** - Deep analysis of real competitor advertising strategies
 - **Instagram Creative Intelligence** - Design patterns, color psychology, typography trends
