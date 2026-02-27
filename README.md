@@ -52,6 +52,12 @@ Review and approve strategic recommendations before execution with confirmation 
 - **UI Components:** shadcn/ui
 - **PDF Generation:** jsPDF
 
+## Planned AWS Architecture:
+- **Amazon Bedrock**
+- **AWS Lambda**
+- **Amazon S3**
+- **Amazon DynamoDB**
+
 ## Getting Started
 
 ### Prerequisites
