@@ -1,3 +1,6 @@
+# Demo Video
+https://github.com/user-attachments/assets/37d618fc-263c-40cb-91a9-9f6ec2f4481c
+
 # Genome AI - Enterprise Marketing Intelligence Platform
 
 Genome AI is an AI-powered **Enterprise Marketing Intelligence Platform** that helps businesses make strategic decisions using AI agents, competitive ad intelligence, and brand analysis.
